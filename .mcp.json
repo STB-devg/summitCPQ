@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "angular": {
+      "command": "npx",
+      "args": ["@anthropic-ai/angular-mcp"]
+    }
+  }
+}

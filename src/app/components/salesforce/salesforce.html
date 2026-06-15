@@ -1,0 +1,55 @@
+<div class="container">
+  <div class="header">
+    <h1>Open Opportunities</h1>
+    <p class="subtitle">By Salesforce Owner ID</p>
+  </div>
+
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="Enter Owner ID (005...)"
+      [ngModel]="ownerId()"
+      (ngModelChange)="ownerId.set($event)"
+      (keyup.enter)="fetch()"
+    />
+    <button (click)="fetch()" [disabled]="loading() || !ownerId().trim()">
+      {{ loading() ? 'Loading...' : 'Fetch' }}
+    </button>
+  </div>
+
+  <div class="error" *ngIf="error()">
+    {{ error() }}
+  </div>
+
+  <div class="results" *ngIf="records().length > 0">
+    <div class="results-header">
+      <span>{{ records().length }} open opportunit{{ records().length === 1 ? 'y' : 'ies' }}</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Account</th>
+          <th>Opportunity</th>
+          <th>Stage</th>
+          <th>Amount</th>
+          <th>Close Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (opp of records(); track opp.Id) {
+          <tr>
+            <td class="account">{{ opp.Account?.Name ?? '—' }}</td>
+            <td>{{ opp.Name }}</td>
+            <td><span class="stage">{{ opp.StageName }}</span></td>
+            <td class="amount">{{ opp.Amount != null ? (opp.Amount | currency) : '—' }}</td>
+            <td class="date">{{ opp.CloseDate }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="empty" *ngIf="!loading() && !error() && records().length === 0 && ownerId().trim()">
+    No open opportunities found for this owner.
+  </div>
+</div>
