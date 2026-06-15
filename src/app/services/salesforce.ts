@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Opportunity, OpportunityResponse } from '../models/salesforce';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class SalesforceService {
   // Change this to your Vercel production URL when deployed
   //private apiUrl = 'http://localhost:3000';
 
-private apiUrl = 'https://config-roan.vercel.app';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
