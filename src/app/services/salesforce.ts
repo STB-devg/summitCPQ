@@ -11,7 +11,7 @@ export class SalesforceService {
   // Change this to your Vercel production URL when deployed
   //private apiUrl = 'http://localhost:3000';
 
-private apiUrl = 'https://config-n20a22v5j-sbodies-s-projects.vercel.app';
+private apiUrl = 'https://config-roan.vercel.app';
 
   constructor(private http: HttpClient) {}
 
