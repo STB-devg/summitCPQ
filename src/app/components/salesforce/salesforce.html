@@ -1,3 +1,8 @@
+<div class="top-bar">
+  <span>{{ auth.currentUser()?.email }}</span>
+  <button type="button" (click)="logout()">Sign out</button>
+</div>
+
 <div class="container">
   <div class="header">
     <h1>Open Opportunities</h1>
@@ -5,34 +10,39 @@
   </div>
 
   <div class="search-bar">
+    <label for="ownerId" class="sr-only">Owner ID</label>
     <input
+      id="ownerId"
       type="text"
       placeholder="Enter Owner ID (005...)"
-      [ngModel]="ownerId()"
-      (ngModelChange)="ownerId.set($event)"
+      [formControl]="ownerIdControl"
       (keyup.enter)="fetch()"
+      [attr.aria-invalid]="ownerIdControl.invalid && ownerIdControl.touched"
     />
-    <button (click)="fetch()" [disabled]="loading() || !ownerId().trim()">
+    <button
+      type="button"
+      (click)="fetch()"
+      [disabled]="loading() || ownerIdControl.invalid">
       {{ loading() ? 'Loading...' : 'Fetch' }}
     </button>
   </div>
 
-  <div class="error" *ngIf="error()">
-    {{ error() }}
-  </div>
+  @if (error()) {
+    <div class="error" role="alert">{{ error() }}</div>
+  }
 
-  <div class="results" *ngIf="records().length > 0">
+  @if (records().length > 0) {
     <div class="results-header">
-      <span>{{ records().length }} open opportunit{{ records().length === 1 ? 'y' : 'ies' }}</span>
+      {{ records().length }} open opportunit{{ records().length === 1 ? 'y' : 'ies' }}
     </div>
     <table>
       <thead>
         <tr>
-          <th>Account</th>
-          <th>Opportunity</th>
-          <th>Stage</th>
-          <th>Amount</th>
-          <th>Close Date</th>
+          <th scope="col">Account</th>
+          <th scope="col">Opportunity</th>
+          <th scope="col">Stage</th>
+          <th scope="col">Amount</th>
+          <th scope="col">Close Date</th>
         </tr>
       </thead>
       <tbody>
@@ -47,9 +57,9 @@
         }
       </tbody>
     </table>
-  </div>
+  }
 
-  <div class="empty" *ngIf="!loading() && !error() && records().length === 0 && ownerId().trim()">
-    No open opportunities found for this owner.
-  </div>
+  @if (!loading() && !error() && records().length === 0 && ownerIdControl.value) {
+    <div class="empty">No open opportunities found for this owner.</div>
+  }
 </div>

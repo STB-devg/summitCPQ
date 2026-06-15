@@ -1,32 +1,37 @@
-import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Component, signal, inject } from '@angular/core';
+import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
+import { CurrencyPipe } from '@angular/common';
 import { SalesforceService } from '../../services/salesforce';
+import { AuthService } from '../../services/auth.service';
 import { Opportunity } from '../../models/salesforce';
 
 @Component({
   selector: 'app-salesforce',
-  imports: [CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, CurrencyPipe],
   templateUrl: './salesforce.html',
-  styleUrl: './salesforce.scss',
+  styleUrl: './salesforce.scss'
 })
-
 export class SalesforceComponent {
-  ownerId  = signal('');
-  records  = signal<Opportunity[]>([]);
-  loading  = signal(false);
-  error    = signal<string | null>(null);
+  private svc = inject(SalesforceService);
+  auth        = inject(AuthService);
 
-  constructor(private svc: SalesforceService) {}
+  ownerIdControl = new FormControl('', [
+    Validators.required,
+    Validators.pattern(/^005[a-zA-Z0-9]{15}$/)
+  ]);
+
+  records = signal<Opportunity[]>([]);
+  loading = signal(false);
+  error   = signal<string | null>(null);
 
   fetch() {
-    if (!this.ownerId().trim()) return;
+    if (this.ownerIdControl.invalid) return;
 
     this.loading.set(true);
     this.error.set(null);
     this.records.set([]);
 
-    this.svc.getOpenOpportunities(this.ownerId()).subscribe({
+    this.svc.getOpenOpportunities(this.ownerIdControl.value!).subscribe({
       next: data => {
         this.records.set(data);
         this.loading.set(false);
@@ -36,5 +41,9 @@ export class SalesforceComponent {
         this.loading.set(false);
       }
     });
+  }
+
+  logout() {
+    this.auth.signOut();
   }
 }

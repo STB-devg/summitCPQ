@@ -1,4 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000'
+  apiUrl: 'https://config-roan.vercel.app',
+  supabaseUrl: 'https://onsjiwclcxmxicmsvswt.supabase.co',
+  supabaseKey: 'sb_publishable_fbEMzMvOaottDYXUSXaTnw_q2PswOMj'
 };
