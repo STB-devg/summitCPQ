@@ -9,7 +9,9 @@ import { Opportunity, OpportunityResponse } from '../models/salesforce';
 })
 export class SalesforceService {
   // Change this to your Vercel production URL when deployed
-  private apiUrl = 'http://localhost:3000';
+  //private apiUrl = 'http://localhost:3000';
+
+private apiUrl = 'config-n20a22v5j-sbodies-s-projects.vercel.app';
 
   constructor(private http: HttpClient) {}
 
