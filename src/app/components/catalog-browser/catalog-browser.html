@@ -1,0 +1,152 @@
+<div class="top-bar">
+  <span>{{ auth.currentUser()?.email }}</span>
+  <button type="button" (click)="auth.signOut()">Sign out</button>
+</div>
+
+<div class="container">
+  <div class="header">
+    <h1>Product Catalog</h1>
+    <p class="subtitle">Browse available options for your configuration</p>
+  </div>
+
+  <div class="controls">
+    <div class="search-bar">
+      <label for="search" class="sr-only">Search catalog</label>
+      <input
+        id="search"
+        type="text"
+        placeholder="Search by code, description, or group..."
+        [formControl]="searchControl"
+        [attr.aria-label]="'Search catalog'"
+      />
+    </div>
+
+    <div class="filter-bar">
+      <label for="filter">Filter:</label>
+      <select
+        id="filter"
+        [formControl]="filterControl"
+        [attr.aria-label]="'Filter options'"
+      >
+        <option value="enabled">Enabled Only</option>
+        <option value="all">All Options</option>
+      </select>
+    </div>
+
+    <button
+      type="button"
+      (click)="refreshCatalog()"
+      [disabled]="loading()"
+      [attr.aria-label]="'Refresh catalog'"
+    >
+      {{ loading() ? 'Loading...' : 'Refresh' }}
+    </button>
+  </div>
+
+  @if (error()) {
+    <div class="error" role="alert">{{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="loading">Loading catalog...</div>
+  }
+
+  @if (!loading() && filteredOptions().length > 0) {
+    <div class="results-header">
+      {{ filteredOptions().length }} option{{ filteredOptions().length === 1 ? '' : 's' }} found
+    </div>
+
+    <div class="catalog-grid">
+      @for (option of filteredOptions(); track option.id) {
+        <div class="catalog-card" [attr.data-enabled]="option.enabled">
+          <div class="card-header">
+            <h3>{{ option.option_code }}</h3>
+            @if (!option.enabled) {
+              <span class="badge disabled">Disabled</span>
+            }
+          </div>
+
+          <div class="card-content">
+            <p class="description">{{ option.description }}</p>
+
+            @if (option.group_name) {
+              <div class="meta">
+                <strong>Group:</strong> {{ option.group_name }}
+              </div>
+            }
+
+            @if (option.section) {
+              <div class="meta">
+                <strong>Section:</strong> {{ option.section }}
+              </div>
+            }
+
+            @if (option.series) {
+              <div class="meta">
+                <strong>Series:</strong> {{ option.series }}
+              </div>
+            }
+
+            @if (option.help_text) {
+              <div class="help-text">{{ option.help_text }}</div>
+            }
+
+            @if (getPricing(option.id)) {
+              <div class="pricing">
+                @if (getPricing(option.id)!.cost != null) {
+                  <div class="price">
+                    <strong>Cost:</strong> ${{ getPricing(option.id)!.cost!.toFixed(2) }}
+                  </div>
+                }
+                @if (getPricing(option.id)!.weight_lbs != null) {
+                  <div class="weight">
+                    <strong>Weight:</strong> {{ getPricing(option.id)!.weight_lbs }} lbs
+                  </div>
+                }
+              </div>
+            }
+
+            @if (getQuoteConfig(option.id)) {
+              <div class="quote-config">
+                @if (getQuoteConfig(option.id)!.quote_label) {
+                  <div>
+                    <strong>Quote Label:</strong> {{ getQuoteConfig(option.id)!.quote_label }}
+                  </div>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="card-footer">
+            @if (option.additional_info_url) {
+              <a
+                [href]="option.additional_info_url"
+                target="_blank"
+                rel="noopener noreferrer"
+                [attr.aria-label]="'More info about ' + option.option_code"
+              >
+                More Info ↗
+              </a>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  @if (!loading() && filteredOptions().length === 0 && options().length > 0) {
+    <div class="empty">
+      @if (searchControl.value) {
+        <p>No options match your search.</p>
+      } @else {
+        <p>No enabled options available.</p>
+      }
+    </div>
+  }
+
+  @if (!loading() && options().length === 0) {
+    <div class="empty">
+      <p>No options in catalog.</p>
+    </div>
+  }
+</div>

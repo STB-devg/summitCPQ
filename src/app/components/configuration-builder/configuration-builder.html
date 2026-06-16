@@ -1,0 +1,177 @@
+<div class="top-bar">
+  <span>{{ auth.currentUser()?.email }}</span>
+  <button type="button" (click)="auth.signOut()">Sign out</button>
+</div>
+
+<div class="container">
+  <div class="header">
+    <h1>Configuration Builder</h1>
+    <p class="subtitle">Build your custom configuration</p>
+  </div>
+
+  @if (error()) {
+    <div class="error" role="alert">{{ error() }}</div>
+  }
+
+  @if (successMessage()) {
+    <div class="success" role="status">{{ successMessage() }}</div>
+  }
+
+  <div class="config-info">
+    <div class="info-card">
+      <h2>Configuration ID</h2>
+      <div class="config-id-display">
+        <code>{{ configurationId() }}</code>
+        <button
+          type="button"
+          (click)="copyConfigId()"
+          [attr.aria-label]="'Copy configuration ID'"
+          class="copy-btn"
+        >
+          Copy
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="builder-section">
+    <h2>Add Items to Configuration</h2>
+
+    <form [formGroup]="addItemForm" (ngSubmit)="addItem()" class="add-item-form">
+      <div class="form-group">
+        <label for="optionCode">Option</label>
+        <select
+          id="optionCode"
+          formControlName="optionCode"
+          [attr.aria-label]="'Select option'"
+        >
+          <option value="">-- Select an option --</option>
+          @for (option of allOptions(); track option.id) {
+            <option [value]="option.option_code">
+              {{ option.option_code }} - {{ option.description }}
+            </option>
+          }
+        </select>
+        @if (addItemForm.get('optionCode')?.invalid && addItemForm.get('optionCode')?.touched) {
+          <span class="error-text">Option is required</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="qty">Quantity</label>
+        <input
+          id="qty"
+          type="number"
+          formControlName="qty"
+          min="1"
+          [attr.aria-label]="'Quantity'"
+        />
+        @if (addItemForm.get('qty')?.invalid && addItemForm.get('qty')?.touched) {
+          <span class="error-text">Quantity must be at least 1</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="location">Location (optional)</label>
+        <input
+          id="location"
+          type="text"
+          formControlName="location"
+          placeholder="e.g., Front, Back, Top"
+          [attr.aria-label]="'Item location'"
+        />
+      </div>
+
+      <div class="form-group checkbox">
+        <label>
+          <input type="checkbox" formControlName="showImageOnQuote" />
+          <span>Show image on quote</span>
+        </label>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="loading() || addItemForm.invalid"
+        [attr.aria-label]="'Add item to configuration'"
+      >
+        {{ loading() ? 'Adding...' : 'Add Item' }}
+      </button>
+    </form>
+  </div>
+
+  <div class="items-section">
+    <h2>Configuration Items ({{ configItems().length }})</h2>
+
+    @if (configItems().length > 0) {
+      <div class="items-table">
+        <table role="table">
+          <thead>
+            <tr>
+              <th scope="col">Option Code</th>
+              <th scope="col">Description</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Location</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of configItems(); track item.id) {
+              <tr [attr.data-item-id]="item.id">
+                <td class="option-code">{{ item.option_code }}</td>
+                <td class="description">
+                  {{ getOptionForItem(item)?.description || '—' }}
+                </td>
+                <td class="quantity">
+                  <div class="qty-control">
+                    <button
+                      type="button"
+                      (click)="updateItemQty(item.id, item.qty - 1)"
+                      [disabled]="item.qty <= 1"
+                      [attr.aria-label]="'Decrease quantity'"
+                      class="qty-btn"
+                    >
+                      −
+                    </button>
+                    <input
+                      type="number"
+                      [(ngModel)]="item.qty"
+                      (change)="updateItemQty(item.id, item.qty)"
+                      min="1"
+                      [attr.aria-label]="'Quantity for ' + item.option_code"
+                    />
+                    <button
+                      type="button"
+                      (click)="updateItemQty(item.id, item.qty + 1)"
+                      [attr.aria-label]="'Increase quantity'"
+                      class="qty-btn"
+                    >
+                      +
+                    </button>
+                  </div>
+                </td>
+                <td class="location">
+                  {{ item.location || '—' }}
+                </td>
+                <td class="actions">
+                  <button
+                    type="button"
+                    (click)="removeItem(item.id)"
+                    [disabled]="loading()"
+                    [attr.aria-label]="'Remove ' + item.option_code"
+                    class="remove-btn"
+                  >
+                    Remove
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <div class="empty">
+        <p>No items in configuration yet. Add one above.</p>
+      </div>
+    }
+  </div>
+</div>

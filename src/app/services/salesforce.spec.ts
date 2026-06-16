@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Salesforce } from './salesforce';
+import { SalesforceService } from './salesforce';
 
-describe('Salesforce', () => {
-  let service: Salesforce;
+describe('SalesforceService', () => {
+  let service: SalesforceService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(Salesforce);
+    service = TestBed.inject(SalesforceService);
   });
 
   it('should be created', () => {

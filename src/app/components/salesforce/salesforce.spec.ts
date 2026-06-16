@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Salesforce } from './salesforce';
+import { SalesforceComponent } from './salesforce';
 
-describe('Salesforce', () => {
-  let component: Salesforce;
-  let fixture: ComponentFixture<Salesforce>;
+describe('SalesforceComponent', () => {
+  let component: SalesforceComponent;
+  let fixture: ComponentFixture<SalesforceComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Salesforce],
+      imports: [SalesforceComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Salesforce);
+    fixture = TestBed.createComponent(SalesforceComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

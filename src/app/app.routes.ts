@@ -11,6 +11,16 @@ export const routes: Routes = [
     loadComponent: () => import('./components/salesforce/salesforce').then(m => m.SalesforceComponent),
     canActivate: [authGuard]
   },
-  { path: '',   redirectTo: 'opportunities', pathMatch: 'full' },
+  {
+    path: 'catalog',
+    loadComponent: () => import('./components/catalog-browser/catalog-browser').then(m => m.CatalogBrowserComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'configuration',
+    loadComponent: () => import('./components/configuration-builder/configuration-builder').then(m => m.ConfigurationBuilderComponent),
+    canActivate: [authGuard]
+  },
+  { path: '', redirectTo: 'opportunities', pathMatch: 'full' },
   { path: '**', redirectTo: 'opportunities' }
 ];
