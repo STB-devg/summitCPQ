@@ -4,10 +4,11 @@ import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { CatalogService } from '../../services/catalog.service';
 import { AuthService } from '../../services/auth.service';
 import { Option, OptionPricing, OptionQuoteConfig } from '../../models/catalog';
+import { NavMenuComponent } from '../nav-menu/nav-menu';
 
 @Component({
   selector: 'app-catalog-browser',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NavMenuComponent],
   templateUrl: './catalog-browser.html',
   styleUrl: './catalog-browser.scss'
 })

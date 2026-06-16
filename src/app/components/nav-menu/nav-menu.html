@@ -1,0 +1,69 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">
+      <span class="logo">SummitCPQ</span>
+    </div>
+
+    <button
+      type="button"
+      class="hamburger"
+      (click)="toggleMenu()"
+      [attr.aria-label]="'Navigation menu'"
+      [attr.aria-expanded]="isMenuOpen"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="nav-menu" [class.open]="isMenuOpen">
+      <ul class="nav-links">
+        <li>
+          <a
+            routerLink="/opportunities"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            (click)="closeMenu()"
+            [attr.aria-label]="'Navigate to opportunities'"
+          >
+            Opportunities
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/catalog"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            (click)="closeMenu()"
+            [attr.aria-label]="'Navigate to product catalog'"
+          >
+            Catalog
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/configuration"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            (click)="closeMenu()"
+            [attr.aria-label]="'Navigate to configuration builder'"
+          >
+            Configuration
+          </a>
+        </li>
+      </ul>
+
+      <div class="nav-user">
+        <span class="user-email">{{ auth.currentUser()?.email }}</span>
+        <button
+          type="button"
+          class="btn-logout"
+          (click)="auth.signOut(); closeMenu()"
+          [attr.aria-label]="'Sign out'"
+        >
+          Sign out
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>

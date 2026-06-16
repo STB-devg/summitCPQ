@@ -4,10 +4,11 @@ import { ReactiveFormsModule, FormControl, FormGroup, Validators, FormsModule } 
 import { CatalogService } from '../../services/catalog.service';
 import { AuthService } from '../../services/auth.service';
 import { ConfigurationItem, Option } from '../../models/catalog';
+import { NavMenuComponent } from '../nav-menu/nav-menu';
 
 @Component({
   selector: 'app-configuration-builder',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, NavMenuComponent],
   templateUrl: './configuration-builder.html',
   styleUrl: './configuration-builder.scss'
 })

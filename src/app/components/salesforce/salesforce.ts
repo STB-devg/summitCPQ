@@ -4,10 +4,11 @@ import { CurrencyPipe } from '@angular/common';
 import { SalesforceService } from '../../services/salesforce';
 import { AuthService } from '../../services/auth.service';
 import { Opportunity } from '../../models/salesforce';
+import { NavMenuComponent } from '../nav-menu/nav-menu';
 
 @Component({
   selector: 'app-salesforce',
-  imports: [ReactiveFormsModule, CurrencyPipe],
+  imports: [ReactiveFormsModule, CurrencyPipe, NavMenuComponent],
   templateUrl: './salesforce.html',
   styleUrl: './salesforce.scss'
 })
@@ -41,9 +42,5 @@ export class SalesforceComponent {
         this.loading.set(false);
       }
     });
-  }
-
-  logout() {
-    this.auth.signOut();
   }
 }
